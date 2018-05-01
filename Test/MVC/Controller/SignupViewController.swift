@@ -7,29 +7,51 @@
 //
 
 import UIKit
+import ACFloatingTextfield_Swift
 
-class SignupViewController: UIViewController {
-
+class SignupViewController: UIViewController {    
+    //MARK:- OUTLETS
+    @IBOutlet weak var txtPassword: ACFloatingTextfield!
+    @IBOutlet weak var txtEmail: ACFloatingTextfield!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    }
+   
+}
+extension SignupViewController {
+    
+    @IBAction func btnActionLogin(_ sender: Any) {
+        guard let vc = R.storyboard.main.loginViewController() else { return }
+        self.pushVC(vc)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func btnActionShow(_ sender: Any) {
+        txtPassword.isSecureTextEntry = !txtPassword.isSecureTextEntry
     }
-    */
-
+    
+    @IBAction func btnActionsignup(_ sender: Any) {
+        self.view.endEditing(true)
+        if "".login(email: txtEmail.text,password : txtPassword.text) {
+            APIManager.shared.request(with: HomeEndpoint.register(email: txtEmail.text, password: txtPassword.text)) { [unowned self](response) in
+                switch response{
+                case .success(let dataResponse):
+                    let str = dataResponse as? String
+                    if /str != "" {
+                         Alerts.shared.show(alert: .alert, message: "Account created successfully", type: .info)
+                        guard let vc = R.storyboard.main.userListViewController() else { return }
+                        self.pushVC(vc)
+                    }
+              
+                case .failure(let str):
+                    Alerts.shared.show(alert: .oops, message: str as? String ?? "", type: .error)
+                }
+            }
+        }
+    }
 }

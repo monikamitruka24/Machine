@@ -7,18 +7,18 @@
 //
 
 import UIKit
+import IBAnimatable
+import SDWebImage
 
 class UserListTableViewCell: UITableViewCell {
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    @IBOutlet var lblName: UILabel!
+    @IBOutlet var imgUser: AnimatableImageView!
+    
+    
+    func configureCell(model : UserList) {
+        lblName.text = /model.first_name + " " + /model.last_name
+        imgUser.sd_setImage(with: URL(string : /model.avatar), completed: nil)
     }
 
 }

@@ -9,5 +9,9 @@
 import UIKit
 
 class UserImage: NSObject {
+    
+    var name : String?
+    var show_url : String?
+    var th_url : String?
 
 }
